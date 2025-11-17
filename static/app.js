@@ -81,6 +81,50 @@ document.addEventListener('DOMContentLoaded', () => {
   // initialize theme from storage
   loadTheme();
 
+  // Export / Import theme controls
+  const exportBtn = document.getElementById('export-theme');
+  const importFile = document.getElementById('import-theme-file');
+
+  if (exportBtn) {
+    exportBtn.addEventListener('click', () => {
+      const raw = localStorage.getItem('qr_theme') || '{}';
+      const blob = new Blob([raw], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'qr-theme.json';
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+  }
+
+  if (importFile) {
+    importFile.addEventListener('change', (ev) => {
+      const f = ev.target.files && ev.target.files[0];
+      if (!f) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          const theme = JSON.parse(reader.result);
+          if (theme) {
+            // populate controls if present
+            if (theme.primary) primaryColor.value = theme.primary;
+            if (theme.panelBg) panelBg.value = theme.panelBg;
+            if (theme.pageBg) pageBg.value = theme.pageBg;
+            if (theme.preset && themeSelect) themeSelect.value = theme.preset;
+            applyTheme(theme);
+            alert('Theme imported and applied');
+          }
+        } catch (e) {
+          alert('Invalid theme file');
+        }
+      };
+      reader.readAsText(f);
+      // clear input so same file can be reimported later
+      ev.target.value = '';
+    });
+  }
+
   form.addEventListener('submit', async (ev) => {
     ev.preventDefault();
     const formData = new FormData(form);

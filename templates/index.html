@@ -28,7 +28,7 @@
           <input id="primary-color" type="color" value="#667eea">
         </div>
       </div>
-      <div class="form-row">
+        <div class="form-row">
         <div class="form-group">
           <label for="panel-bg">Panel Background</label>
           <input id="panel-bg" type="color" value="#ffffff">
@@ -38,9 +38,16 @@
           <input id="page-bg" type="color" value="#667eea">
         </div>
       </div>
-    </section>
-
-    <form id="qr-form">
+      <div class="form-row">
+        <div class="form-group">
+          <button id="export-theme" type="button">Export Theme</button>
+        </div>
+        <div class="form-group">
+          <label for="import-theme-file">Import Theme (JSON)</label>
+          <input id="import-theme-file" type="file" accept="application/json">
+        </div>
+      </div>
+    </section>    <form id="qr-form">
       <fieldset>
         <legend>QR Code Settings</legend>
         <div class="form-group">
