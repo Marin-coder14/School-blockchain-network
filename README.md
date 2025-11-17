@@ -1,3 +1,5 @@
+[![CI](https://github.com/<OWNER>/<REPO>/actions/workflows/ci.yml/badge.svg)](https://github.com/<OWNER>/<REPO>/actions/workflows/ci.yml)
+
 QR Code Generator
 
 This repository contains a small Python script to generate QR code images from a command-line text argument.
@@ -36,3 +38,7 @@ Example
 ```
 python generate_qr.py "Hello from PowerShell" -o hello.png --box-size 8 --border 2
 ```
+
+Badge notes
+
+- Replace `<OWNER>/<REPO>` in the badge URL above with your GitHub repository path to enable the workflow status badge.
