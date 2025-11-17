@@ -11,3 +11,9 @@ venv/
 *.egg-info/
 # Ignore generated images (optional)
 *.png
+# Ignore certs and sensitive files
+/certs/
+*.pfx
+*.pem
+*.key
+*.crt

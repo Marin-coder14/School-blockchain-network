@@ -10,16 +10,55 @@
   <main>
     <h1>QR Code Generator</h1>
     <form id="qr-form">
-      <label for="text">Text or URL</label>
-      <input id="text" name="text" type="text" placeholder="https://example.com" required>
-      <div class="controls">
-        <button type="submit">Generate</button>
-      </div>
+      <fieldset>
+        <legend>QR Code Settings</legend>
+        <div class="form-group">
+          <label for="text">Text or URL <span aria-label="required">*</span></label>
+          <input id="text" name="text" type="text" placeholder="https://example.com" required>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="box-size">Box Size (pixels)</label>
+            <input id="box-size" name="box-size" type="number" min="5" max="20" value="10">
+          </div>
+          <div class="form-group">
+            <label for="border">Border (boxes)</label>
+            <input id="border" name="border" type="number" min="1" max="10" value="4">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="fill-color">QR Color</label>
+            <input id="fill-color" name="fill-color" type="color" value="#000000">
+          </div>
+          <div class="form-group">
+            <label for="back-color">Background Color</label>
+            <input id="back-color" name="back-color" type="color" value="#ffffff">
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="error">Error Correction</label>
+          <select id="error" name="error">
+            <option value="L">Low (7%)</option>
+            <option value="M" selected>Medium (15%)</option>
+            <option value="Q">Quartile (25%)</option>
+            <option value="H">High (30%)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <button type="submit">Generate QR Code</button>
+        </div>
+      </fieldset>
     </form>
 
-    <div id="result">
-      <p>Result:</p>
-      <img id="qr-image" alt="QR code will appear here" />
+    <div id="result" class="hidden">
+      <h2>Result</h2>
+      <div class="image-container">
+        <img id="qr-image" alt="QR code" />
+      </div>
+      <div class="button-group">
+        <button id="download-btn" type="button">Download PNG</button>
+      </div>
     </div>
   </main>
   <script src="/static/app.js"></script>
