@@ -9,11 +9,29 @@ __pycache__/
 env/
 venv/
 *.egg-info/
-# Ignore generated images (optional)
+dist/
+build/
+
+# Generated images
 *.png
-# Ignore certs and sensitive files
+!README_assets/*.png
+
+# Sensitive files - NEVER commit certs or secrets
 /certs/
 *.pfx
 *.pem
 *.key
 *.crt
+.env
+.env.local
+.env.*.local
+
+# IDEs
+.idea/
+*.swp
+*.swo
+*~
+.idea/
+
+# OS
+Thumbs.db
