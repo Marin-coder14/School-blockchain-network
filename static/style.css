@@ -1,25 +1,27 @@
-h:root{
-  --bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+h1 { margin: 0 0 28px 0; color: var(--primary, #667eea); text-align: center; font-size: 28px; }
+/* CSS variables for theming */
+:root {
+  --primary: #667eea;
+  --page-accent: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   --panel-bg: #ffffff;
-  --accent: #667eea;
-  --text: #111111;
-  --button-bg: var(--accent);
+  --text-color: #111111;
+  --panel-shadow: 0 10px 40px rgba(0,0,0,0.2);
+  --button-bg: var(--primary);
   --button-hover: #5568d3;
   --download-bg: #10b981;
 }
 
 * { box-sizing: border-box; }
-body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 24px; min-height: 100vh; }
-main { max-width: 600px; margin: 24px auto; background: var(--panel-bg); border-radius: 12px; padding: 32px; box-shadow: 0 10px 40px rgba(0,0,0,0.12); }
-h1 { margin: 0 0 28px 0; color: var(--accent); text-align: center; font-size: 28px; }
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: var(--page-accent); color: var(--text-color); margin: 0; padding: 24px; min-height: 100vh; }
+main { max-width: 600px; margin: 24px auto; background: var(--panel-bg); border-radius: 12px; padding: 32px; box-shadow: var(--panel-shadow); }
 h2 { margin: 12px 0; font-size: 18px; }
 fieldset { border: none; padding: 0; margin: 0; }
 legend { display: none; }
 .form-group { display: grid; gap: 6px; margin-bottom: 16px; }
 .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 label { font-weight: 500; font-size: 14px; }
-input[type="text"], input[type="number"], input[type="color"], select { padding: 10px 12px; border: 1px solid #d1d5db; border-radius: 6px; width: 100%; font-size: 14px; }
-input[type="text"]:focus, input[type="number"]:focus, input[type="color"]:focus, select:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.08); }
+.form-row input[type="text"], .form-row input[type="number"], input[type="color"], select { padding: 10px 12px; border: 1px solid #d1d5db; border-radius: 6px; width: 100%; font-size: 14px; }
+.form-row input:focus, select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.08); }
 button { padding: 10px 16px; border: none; background: var(--button-bg); color: white; border-radius: 6px; cursor: pointer; font-weight: 500; font-size: 14px; transition: background 0.2s; }
 button:hover { background: var(--button-hover); }
 button:active { transform: scale(0.98); }
@@ -28,35 +30,6 @@ button:active { transform: scale(0.98); }
 .button-group { display: flex; gap: 8px; margin-top: 16px; }
 #download-btn { flex: 1; background: var(--download-bg); }
 #download-btn:hover { background: #059669; }
-
-/* Theme classes */
-.theme-light{
-  --bg: linear-gradient(135deg, #e6eefc 0%, #f8fbff 100%);
-  --panel-bg: #ffffff;
-  --accent: #2563eb;
-  --text: #111111;
-  --button-bg: var(--accent);
-  --button-hover: #1e40af;
-  --download-bg: #10b981;
-}
-.theme-dark{
-  --bg: linear-gradient(135deg, #0f172a 0%, #0b1220 100%);
-  --panel-bg: #0b1220;
-  --accent: #8b5cf6;
-  --text: #e6eefc;
-  --button-bg: #8b5cf6;
-  --button-hover: #6d28d9;
-  --download-bg: #059669;
-}
-.theme-purple{
-  --bg: linear-gradient(135deg, #5b21b6 0%, #a78bfa 100%);
-  --panel-bg: #fff7ff;
-  --accent: #7c3aed;
-  --text: #2a2542;
-  --button-bg: #7c3aed;
-  --button-hover: #6d28d9;
-  --download-bg: #c084fc;
-}
 .hidden { display: none !important; }
 
 @media (max-width: 520px) {

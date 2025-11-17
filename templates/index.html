@@ -9,6 +9,37 @@
 <body>
   <main>
     <h1>QR Code Generator</h1>
+
+    <section id="theme-section" class="theme-section">
+      <h2>Theme</h2>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="theme-select">Preset</label>
+          <select id="theme-select">
+            <option value="default">Default</option>
+            <option value="light">Light</option>
+            <option value="dark">Dark</option>
+            <option value="purple">Purple</option>
+            <option value="custom">Custom</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="primary-color">Primary Color</label>
+          <input id="primary-color" type="color" value="#667eea">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="panel-bg">Panel Background</label>
+          <input id="panel-bg" type="color" value="#ffffff">
+        </div>
+        <div class="form-group">
+          <label for="page-bg">Page Accent</label>
+          <input id="page-bg" type="color" value="#667eea">
+        </div>
+      </div>
+    </section>
+
     <form id="qr-form">
       <fieldset>
         <legend>QR Code Settings</legend>
@@ -50,35 +81,6 @@
         </div>
       </fieldset>
     </form>
-
-    <section class="theme-section">
-      <h2>Theme</h2>
-      <div class="form-row">
-        <div class="form-group">
-          <label for="theme-select">Choose theme</label>
-          <select id="theme-select" name="theme">
-            <option value="light">Light</option>
-            <option value="dark">Dark</option>
-            <option value="purple">Purple</option>
-            <option value="custom">Custom</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="accent-color">Accent color (custom)</label>
-          <input id="accent-color" type="color" value="#667eea">
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label for="bg-color">Background color (custom)</label>
-          <input id="bg-color" type="color" value="#ffffff">
-        </div>
-        <div class="form-group">
-          <label for="text-color">Text color (custom)</label>
-          <input id="text-color" type="color" value="#111111">
-        </div>
-      </div>
-    </section>
 
     <div id="result" class="hidden">
       <h2>Result</h2>

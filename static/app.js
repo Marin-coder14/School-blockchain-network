@@ -3,66 +3,83 @@ document.addEventListener('DOMContentLoaded', () => {
   const img = document.getElementById('qr-image');
   const result = document.getElementById('result');
   const downloadBtn = document.getElementById('download-btn');
+  const themeSelect = document.getElementById('theme-select');
+  const primaryColor = document.getElementById('primary-color');
+  const panelBg = document.getElementById('panel-bg');
+  const pageBg = document.getElementById('page-bg');
   let currentBlob = null;
 
-  // Theme controls
-  const themeSelect = document.getElementById('theme-select');
-  const accentInput = document.getElementById('accent-color');
-  const bgInput = document.getElementById('bg-color');
-  const textInput = document.getElementById('text-color');
+  // Theme helpers
+  function applyTheme(theme) {
+    if (!theme) return;
+    // theme: { preset, primary, panelBg, pageBg }
+    document.documentElement.style.setProperty('--primary', theme.primary);
+    document.documentElement.style.setProperty('--panel-bg', theme.panelBg);
+    document.documentElement.style.setProperty('--page-accent', theme.pageBg);
+    document.documentElement.style.setProperty('--button-bg', theme.primary);
+    // set download default color if provided
+    if (theme.download) document.documentElement.style.setProperty('--download-bg', theme.download);
+    // persist
+    localStorage.setItem('qr_theme', JSON.stringify(theme));
+  }
 
-  function applyTheme(theme, customValues) {
-    document.documentElement.classList.remove('theme-light', 'theme-dark', 'theme-purple');
-    if (theme === 'custom') {
-      // apply inline CSS variables
-      if (customValues) {
-        document.documentElement.style.setProperty('--accent', customValues.accent || '#667eea');
-        document.documentElement.style.setProperty('--bg', customValues.bg || 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)');
-        document.documentElement.style.setProperty('--panel-bg', customValues.panel || '#ffffff');
-        document.documentElement.style.setProperty('--text', customValues.text || '#111111');
+  function loadTheme() {
+    const raw = localStorage.getItem('qr_theme');
+    if (raw) {
+      try {
+        const theme = JSON.parse(raw);
+        // populate controls
+        if (theme.primary) primaryColor.value = theme.primary;
+        if (theme.panelBg) panelBg.value = theme.panelBg;
+        if (theme.pageBg) pageBg.value = theme.pageBg;
+        if (theme.preset) themeSelect.value = theme.preset;
+        applyTheme(theme);
+      } catch (e) {
+        console.warn('Failed to load theme', e);
       }
-    } else {
-      // remove custom inline variables so theme class variables take effect
-      document.documentElement.style.removeProperty('--accent');
-      document.documentElement.style.removeProperty('--bg');
-      document.documentElement.style.removeProperty('--panel-bg');
-      document.documentElement.style.removeProperty('--text');
-      document.documentElement.classList.add('theme-' + theme);
     }
   }
 
-  // Load saved theme
-  const savedTheme = localStorage.getItem('qr_theme') || 'light';
-  const savedAccent = localStorage.getItem('qr_theme_accent') || '#667eea';
-  const savedBg = localStorage.getItem('qr_theme_bg') || '#ffffff';
-  const savedText = localStorage.getItem('qr_theme_text') || '#111111';
-  themeSelect.value = savedTheme;
-  accentInput.value = savedAccent;
-  bgInput.value = savedBg;
-  textInput.value = savedText;
-  applyTheme(savedTheme, { accent: savedAccent, bg: savedBg, text: savedText });
-
-  themeSelect.addEventListener('change', () => {
-    const theme = themeSelect.value;
-    if (theme !== 'custom') {
-      applyTheme(theme);
-    } else {
-      applyTheme('custom', { accent: accentInput.value, bg: `linear-gradient(135deg, ${accentInput.value} 0%, ${accentInput.value}33 100%)`, text: textInput.value, panel: '#ffffff' });
+  function presetToTheme(preset) {
+    switch (preset) {
+      case 'light':
+        return { preset: 'light', primary: '#2563eb', panelBg: '#ffffff', pageBg: 'linear-gradient(135deg,#f8fafc,#e6eefc)', download: '#10b981' };
+      case 'dark':
+        return { preset: 'dark', primary: '#9ca3ff', panelBg: '#0f1724', pageBg: 'linear-gradient(135deg,#0f1724,#031026)', download: '#059669' };
+      case 'purple':
+        return { preset: 'purple', primary: '#7c3aed', panelBg: '#ffffff', pageBg: 'linear-gradient(135deg,#7c3aed,#4c1d95)', download: '#a78bfa' };
+      default:
+        return { preset: 'default', primary: '#667eea', panelBg: '#ffffff', pageBg: 'linear-gradient(135deg,#667eea 0%,#764ba2 100%)', download: '#10b981' };
     }
-    localStorage.setItem('qr_theme', theme);
+  }
+
+  // Theme control events
+  if (themeSelect) {
+    themeSelect.addEventListener('change', (e) => {
+      const theme = presetToTheme(e.target.value);
+      // update color pickers
+      primaryColor.value = theme.primary;
+      panelBg.value = theme.panelBg.startsWith('#') ? theme.panelBg : '#ffffff';
+      pageBg.value = '#667eea';
+      applyTheme(theme);
+    });
+  }
+
+  if (primaryColor) primaryColor.addEventListener('input', () => {
+    const theme = { preset: 'custom', primary: primaryColor.value, panelBg: panelBg.value, pageBg: pageBg.value, download: '#10b981' };
+    applyTheme(theme);
+  });
+  if (panelBg) panelBg.addEventListener('input', () => {
+    const theme = { preset: 'custom', primary: primaryColor.value, panelBg: panelBg.value, pageBg: pageBg.value, download: '#10b981' };
+    applyTheme(theme);
+  });
+  if (pageBg) pageBg.addEventListener('input', () => {
+    const theme = { preset: 'custom', primary: primaryColor.value, panelBg: panelBg.value, pageBg: pageBg.value, download: '#10b981' };
+    applyTheme(theme);
   });
 
-  function saveCustomAndApply(){
-    const values = { accent: accentInput.value, bg: `linear-gradient(135deg, ${accentInput.value} 0%, ${accentInput.value}33 100%)`, text: textInput.value, panel: '#ffffff' };
-    localStorage.setItem('qr_theme_accent', values.accent);
-    localStorage.setItem('qr_theme_bg', values.bg);
-    localStorage.setItem('qr_theme_text', values.text);
-    applyTheme('custom', values);
-  }
-
-  accentInput.addEventListener('input', saveCustomAndApply);
-  bgInput.addEventListener('input', saveCustomAndApply);
-  textInput.addEventListener('input', saveCustomAndApply);
+  // initialize theme from storage
+  loadTheme();
 
   form.addEventListener('submit', async (ev) => {
     ev.preventDefault();
