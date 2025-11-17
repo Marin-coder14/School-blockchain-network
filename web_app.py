@@ -61,19 +61,35 @@ def generate():
 
 if __name__ == '__main__':
     cert_dir = os.path.join(os.path.dirname(__file__), 'certs')
-    cert_file = os.path.join(cert_dir, 'cert.pfx')
-    
-    # Check if cert exists and use HTTPS if available
-    if os.path.exists(cert_file):
-        print("HTTPS certificate found. Running on https://127.0.0.1:5443")
-        print("Note: Your browser may warn about the self-signed certificate (this is normal).")
+    cert_file_pfx = os.path.join(cert_dir, 'cert.pfx')
+    cert_file_pem = os.path.join(cert_dir, 'cert.pem')
+    key_file_pem = os.path.join(cert_dir, 'key.pem')
+
+    # Prefer PEM files (cert.pem + key.pem). If only PFX exists, try converting.
+    if os.path.exists(cert_file_pem) and os.path.exists(key_file_pem):
+        print('Found PEM files. Running HTTPS on https://127.0.0.1:5443')
         try:
-            ctx = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
-            ctx.load_cert_chain(cert_file, password=b'qrcode-ssl-temp')
+            ctx = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
+            ctx.load_cert_chain(cert_file_pem, keyfile=key_file_pem)
             app.run(host='127.0.0.1', port=5443, ssl_context=ctx, debug=True)
         except Exception as e:
-            print(f"HTTPS failed ({e}). Falling back to HTTP on port 5000.")
+            print(f'HTTPS failed ({e}). Falling back to HTTP on port 5000.')
+            app.run(host='127.0.0.1', port=5000, debug=True)
+    elif os.path.exists(cert_file_pfx):
+        print('PFX certificate found; attempting to convert to PEM...')
+        # Try to convert PFX to PEM using create_pem.py
+        try:
+            import subprocess
+            subprocess.check_call(["python", os.path.join(os.path.dirname(__file__), 'create_pem.py'), '--pfx', cert_file_pfx, '--password', 'qrcode-ssl-temp'])
+            if os.path.exists(cert_file_pem) and os.path.exists(key_file_pem):
+                print('Conversion succeeded; starting HTTPS.')
+                ctx = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
+                ctx.load_cert_chain(cert_file_pem, keyfile=key_file_pem)
+                app.run(host='127.0.0.1', port=5443, ssl_context=ctx, debug=True)
+                raise SystemExit
+        except Exception as e:
+            print(f'Conversion or HTTPS failed ({e}). Falling back to HTTP on port 5000.')
             app.run(host='127.0.0.1', port=5000, debug=True)
     else:
-        print("No HTTPS certificate found. Running HTTP on http://127.0.0.1:5000")
+        print('No HTTPS certificate found. Running HTTP on http://127.0.0.1:5000')
         app.run(host='127.0.0.1', port=5000, debug=True)
